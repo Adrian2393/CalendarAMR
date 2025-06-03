@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ro">
+<!DOCTYPE html><html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,11 +16,11 @@
       margin-bottom: 20px;
     }
     h1 {
-      font-size: 36px;
+      font-size: 32px;
       margin-bottom: 10px;
     }
     .flags {
-      margin-top: 5px;
+      margin-top: 10px;
     }
     .flags img {
       width: 30px;
@@ -30,9 +29,9 @@
     .progress-container {
       background-color: #444;
       border-radius: 10px;
-      height: 40px;
+      height: 30px;
       width: 90%;
-      margin: 20px auto;
+      margin: 10px auto;
       overflow: hidden;
       position: relative;
     }
@@ -49,26 +48,27 @@
       transform: translate(-50%, -50%);
       color: #fff;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 14px;
       z-index: 1;
     }
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
+      gap: 10px;
       justify-content: center;
       max-width: 800px;
       margin: 20px auto;
     }
     .day {
-      width: 48px;
-      height: 48px;
-      line-height: 48px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 6px;
       background-color: #2c2c2c;
       border: 1px solid #444;
       font-size: 16px;
-      font-weight: normal;
       position: relative;
     }
     .past {
@@ -81,7 +81,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 48px;
+      font-size: 42px;
       color: rgba(255, 0, 0, 0.85);
       pointer-events: none;
     }
@@ -90,7 +90,7 @@
     }
     .countdown, .today-date {
       margin: 10px 0;
-      font-size: 18px;
+      font-size: 16px;
     }
     footer {
       margin-top: 40px;
@@ -100,25 +100,26 @@
     .month-break {
       grid-column: span 7;
       text-align: center;
-      padding: 10px 0 0;
+      padding: 10px 0;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 18px;
       color: #ffd700;
+      text-transform: uppercase;
     }
     .weekdays {
       display: contents;
     }
     .weekday {
-      font-size: 13px;
       font-weight: bold;
       color: #ccc;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Calendar EUFOR ROT II</h1>
-    <div style="font-size: 18px;">Perioada 13 mai – 23 septembrie</div>
+    <div>Perioada 13 mai – 23 septembrie</div>
     <div class="flags">
       <img src="https://flagcdn.com/ro.svg" alt="România">
       <img src="https://flagcdn.com/ba.svg" alt="Bosnia și Herțegovina">
@@ -129,19 +130,13 @@
       <div class="progress-text" id="progress-text"></div>
       <div class="progress-bar" id="progress-bar"></div>
     </div>
-  </header>
-
-  <div class="calendar" id="calendar"></div>
-
-  <footer>
+  </header>  <div class="calendar" id="calendar"></div>  <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
-  </footer>
-
-  <script>
+  </footer>  <script>
     const start = new Date("2025-05-13");
     const end = new Date("2025-09-23");
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
 
     const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
     const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
@@ -151,7 +146,16 @@
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
 
-    const weekdays = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
+    const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
+
+    function createWeekdaysHeader() {
+      weekdays.forEach(day => {
+        const wd = document.createElement("div");
+        wd.classList.add("weekday");
+        wd.textContent = day;
+        calendarEl.appendChild(wd);
+      });
+    }
 
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
@@ -164,14 +168,7 @@
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
-
-        weekdays.forEach(wd => {
-          const wdEl = document.createElement("div");
-          wdEl.classList.add("weekday");
-          wdEl.textContent = wd;
-          calendarEl.appendChild(wdEl);
-        });
-
+        createWeekdaysHeader();
         lastMonth = currentMonth;
       }
 
@@ -199,6 +196,5 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     todayDateEl.textContent = `Astăzi este ${localeDate}`;
-  </script>
-</body>
+  </script></body>
 </html>
