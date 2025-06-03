@@ -31,7 +31,7 @@
       border-radius: 10px;
       height: 40px;
       width: 90%;
-      margin: 10px auto;
+      margin: 20px auto;
       overflow: hidden;
       position: relative;
     }
@@ -54,21 +54,21 @@
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-      justify-content: center;
+      gap: 6px;
+      justify-items: center;
       max-width: 800px;
       margin: 20px auto;
     }
     .day {
-      width: 48px;
-      height: 48px;
-      line-height: 48px;
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
       border-radius: 6px;
       background-color: #2c2c2c;
       border: 1px solid #444;
-      font-size: 16px;
+      transition: transform 0.3s ease;
+      font-size: 14px;
       text-align: center;
-      position: relative;
     }
     .past {
       background-color: #2c2c2c;
@@ -80,28 +80,12 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 36px;
+      font-size: 64px;
       color: rgba(255, 0, 0, 0.85);
       pointer-events: none;
     }
     .today {
-      background-color: #333;
-      color: #ffd700;
       font-weight: bold;
-      border: 2px solid #ffd700;
-    }
-    .weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-      max-width: 800px;
-      margin: 0 auto 10px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-    .weekdays div {
-      text-align: center;
-      color: #ccc;
     }
     .countdown, .today-date {
       margin: 10px 0;
@@ -121,6 +105,14 @@
       color: #ffd700;
       text-transform: uppercase;
     }
+    .weekdays {
+      display: contents;
+    }
+    .weekday {
+      font-weight: bold;
+      font-size: 12px;
+      color: #bbb;
+    }
   </style>
 </head>
 <body>
@@ -135,7 +127,7 @@
   <div class="countdown" id="countdown"></div>  <div class="progress-container">
     <div class="progress-text" id="progress-text"></div>
     <div class="progress-bar" id="progress-bar"></div>
-  </div>  <div id="calendar-wrapper"></div>  <footer>
+  </div>  <div class="calendar" id="calendar"></div>  <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
   </footer>  <script>
     const start = new Date("2025-05-13");
@@ -145,48 +137,30 @@
 
     const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
     const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
-
+    const calendarEl = document.getElementById("calendar");
     const progressBar = document.getElementById("progress-bar");
     const progressText = document.getElementById("progress-text");
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
-    const calendarWrapper = document.getElementById("calendar-wrapper");
 
     const weekdays = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
 
-    const weekdayRow = document.createElement('div');
-    weekdayRow.classList.add('weekdays');
-    weekdays.forEach(day => {
-      const div = document.createElement('div');
-      div.textContent = day;
-      weekdayRow.appendChild(div);
-    });
-    calendarWrapper.appendChild(weekdayRow);
-
-    const calendarEl = document.createElement('div');
-    calendarEl.classList.add('calendar');
-    calendarWrapper.appendChild(calendarEl);
-
     let lastMonth = "";
+    let currentWeekday = new Date(start).getDay();
+    if (currentWeekday === 0) currentWeekday = 7;
+    calendarEl.innerHTML = weekdays.map(w => `<div class="weekday">${w}</div>`).join('');
+
     for (let i = 0; i < totalDays; i++) {
       const date = new Date(start);
       date.setDate(start.getDate() + i);
 
       const currentMonth = date.toLocaleDateString("ro-RO", { month: 'long' });
-      if (currentMonth !== lastMonth) {
+      if (i === 0 || date.getDate() === 1) {
         const monthLabel = document.createElement("div");
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
-        lastMonth = currentMonth;
-
-        // Add weekday headers again after each month
-        weekdays.forEach(day => {
-          const div = document.createElement('div');
-          div.classList.add('weekdays-header');
-          div.textContent = day;
-          calendarEl.appendChild(div);
-        });
+        calendarEl.innerHTML += weekdays.map(w => `<div class="weekday">${w}</div>`).join('');
       }
 
       const day = document.createElement("div");
