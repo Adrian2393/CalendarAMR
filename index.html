@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar EUFOR ROT II</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+    header {
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    .flags {
+      margin-top: 5px;
+    }
+    .flags img {
+      width: 30px;
+      margin: 0 5px;
+    }
+    .progress-container {
+      background-color: #444;
+      border-radius: 10px;
+      height: 30px;
+      width: 90%;
+      margin: 10px auto;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar {
+      background-color: #28a745;
+      height: 100%;
+      width: 0;
+      transition: width 0.5s ease-in-out;
+    }
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      z-index: 1;
+    }
+    .calendar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .day {
+      padding: 10px;
+      border-radius: 6px;
+      background-color: #2c2c2c;
+      border: 1px solid #444;
+      position: relative;
+      transition: transform 0.3s ease;
+      min-width: 70px;
+      cursor: default;
+      font-size: 13px;
+    }
+    .past {
+      background-color: #2c2c2c;
+      color: #fff;
+    }
+    .past::after {
+      content: "✘";
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 48px;
+      color: rgba(255, 0, 0, 0.3);
+      pointer-events: none;
+    }
+    .today {
+      background-color: #ffd700;
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.6);
+      animation: pulse 2s infinite ease-in-out;
+      transform: scale(1.1);
+      z-index: 1;
+    }
+    .countdown, .today-date {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .proverb {
+      margin: 10px 0;
+      font-size: 16px;
+      font-style: italic;
+      color: #aaa;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #aaa;
+    }
+    .month-break {
+      flex-basis: 100%;
+      text-align: left;
+      padding: 10px 0 0;
+      font-weight: bold;
+      font-size: 18px;
+      color: #ffd700;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6); }
+      70% { box-shadow: 0 0 10px 10px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calendar EUFOR ROT II</h1>
+    <div>Perioada 13 mai – 23 septembrie</div>
+    <div class="flags">
+      <img src="https://flagcdn.com/ro.svg" alt="România">
+      <img src="https://flagcdn.com/ba.svg" alt="Bosnia și Herțegovina">
+    </div>
+  </header>
+
+  <div class="today-date" id="today-date"></div>
+  <div class="countdown" id="countdown"></div>
+  <div class="proverb" id="proverb"></div>
+
+  <div class="progress-container">
+    <div class="progress-text" id="progress-text"></div>
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <div class="calendar" id="calendar"></div>
+
+  <footer>
+    &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
+  </footer>
+
+  <script>
+    const start = new Date("2025-05-13");
+    const end = new Date("2025-09-23");
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
+    const calendarEl = document.getElementById("calendar");
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+    const countdownEl = document.getElementById("countdown");
+    const todayDateEl = document.getElementById("today-date");
+    const proverbEl = document.getElementById("proverb");
+
+    let lastMonth = "";
+    for (let i = 0; i < totalDays; i++) {
+      const date = new Date(start);
+      date.setDate(start.getDate() + i);
+
+      const currentMonth = date.toLocaleDateString("ro-RO", { month: 'long' });
+      if (currentMonth !== lastMonth) {
+        const monthLabel = document.createElement("div");
+        monthLabel.classList.add("month-break");
+        monthLabel.textContent = currentMonth.charAt(0).toUpperCase() + currentMonth.slice(1);
+        calendarEl.appendChild(monthLabel);
+        lastMonth = currentMonth;
+      }
+
+      const day = document.createElement("div");
+      day.classList.add("day");
+      const weekday = date.toLocaleDateString("ro-RO", { weekday: 'short' });
+      const formattedDate = date.toLocaleDateString("ro-RO", { day: '2-digit', month: 'short' });
+      day.textContent = `${formattedDate} ${weekday}`;
+
+      if (date < today) {
+        day.classList.add("past");
+      } else if (date.getTime() === today.getTime()) {
+        day.classList.add("today");
+      }
+
+      calendarEl.appendChild(day);
+    }
+
+    const progressPercent = Math.min((currentDay / totalDays) * 100, 100);
+    progressBar.style.width = progressPercent + "%";
+    progressText.textContent = `Ziua ${currentDay} din ${totalDays}`;
+
+    const remainingDays = Math.max(totalDays - currentDay, 0);
+    countdownEl.textContent = `Zile rămase: ${remainingDays}`;
+
+    const localeDate = new Date().toLocaleDateString("ro-RO", {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    todayDateEl.textContent = `Astăzi este ${localeDate}`;
+
+    const proverbs = await (await fetch("/proverbe.json")).json();
+    const proverbIndex = Math.max(0, Math.min(currentDay - 1, proverbs.length - 1));
+    proverbEl.textContent = proverbs[proverbIndex];
+
+    const sounds = [
+      "https://www.soundjay.com/buttons/sounds/button-16.mp3",
+      "https://www.soundjay.com/buttons/sounds/button-4.mp3",
+      "https://www.soundjay.com/buttons/sounds/button-10.mp3"
+    ];
+    function playRandomSound() {
+      const sound = new Audio(sounds[Math.floor(Math.random() * sounds.length)]);
+      sound.volume = 0.3;
+      sound.play().catch(() => {});
+    }
+
+    window.addEventListener('load', () => {
+      playRandomSound();
+    });
+
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        showDailyNotification();
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            showDailyNotification();
+          }
+        });
+      }
+    }
+
+    function showDailyNotification() {
+      const notif = new Notification("Calendar EUFOR ROT II", {
+        body: `Astăzi este ziua ${currentDay} din ${totalDays}. Ține-o tot așa! 💪`,
+        icon: "https://flagcdn.com/ro.svg"
+      });
+    }
+  </script>
+</body>
+</html>
