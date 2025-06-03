@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
@@ -97,12 +97,6 @@
       margin: 10px 0;
       font-size: 16px;
     }
-    .proverb {
-      margin: 10px 0;
-      font-size: 16px;
-      font-style: italic;
-      color: #aaa;
-    }
     footer {
       margin-top: 40px;
       font-size: 14px;
@@ -135,7 +129,6 @@
 
   <div class="today-date" id="today-date"></div>
   <div class="countdown" id="countdown"></div>
-  <div class="proverb" id="proverb"></div>
 
   <div class="progress-container">
     <div class="progress-text" id="progress-text"></div>
@@ -161,7 +154,6 @@
     const progressText = document.getElementById("progress-text");
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
-    const proverbEl = document.getElementById("proverb");
 
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
@@ -203,44 +195,6 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     todayDateEl.textContent = `Astăzi este ${localeDate}`;
-
-    const proverbs = await (await fetch("/proverbe.json")).json();
-    const proverbIndex = Math.max(0, Math.min(currentDay - 1, proverbs.length - 1));
-    proverbEl.textContent = proverbs[proverbIndex];
-
-    const sounds = [
-      "https://www.soundjay.com/buttons/sounds/button-16.mp3",
-      "https://www.soundjay.com/buttons/sounds/button-4.mp3",
-      "https://www.soundjay.com/buttons/sounds/button-10.mp3"
-    ];
-    function playRandomSound() {
-      const sound = new Audio(sounds[Math.floor(Math.random() * sounds.length)]);
-      sound.volume = 0.3;
-      sound.play().catch(() => {});
-    }
-
-    window.addEventListener('load', () => {
-      playRandomSound();
-    });
-
-    if ("Notification" in window) {
-      if (Notification.permission === "granted") {
-        showDailyNotification();
-      } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            showDailyNotification();
-          }
-        });
-      }
-    }
-
-    function showDailyNotification() {
-      const notif = new Notification("Calendar EUFOR ROT II", {
-        body: `Astăzi este ziua ${currentDay} din ${totalDays}. Ține-o tot așa! 💪`,
-        icon: "https://flagcdn.com/ro.svg"
-      });
-    }
   </script>
 </body>
 </html>
