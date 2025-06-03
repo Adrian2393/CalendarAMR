@@ -70,6 +70,7 @@
       min-width: 70px;
       cursor: default;
       font-size: 13px;
+      text-align: center;
     }
     .past {
       background-color: #2c2c2c;
@@ -78,10 +79,11 @@
     .past::after {
       content: "✘";
       position: absolute;
-      top: 2px;
-      right: 4px;
-      font-size: 48px;
-      color: rgba(255, 0, 0, 0.3);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 72px;
+      color: rgba(255, 0, 0, 0.15);
       pointer-events: none;
     }
     .today {
@@ -92,19 +94,11 @@
       animation: pulse 2s infinite ease-in-out;
       transform: scale(1.1);
       z-index: 1;
+      border: 2px solid #000;
     }
     .countdown, .today-date {
       margin: 10px 0;
       font-size: 16px;
-    }
-    .proverb {
-      margin-top: 20px;
-      font-style: italic;
-      font-size: 16px;
-      color: #ccc;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
     }
     footer {
       margin-top: 40px;
@@ -138,7 +132,6 @@
 
   <div class="today-date" id="today-date"></div>
   <div class="countdown" id="countdown"></div>
-  <div class="proverb" id="proverb"></div>
 
   <div class="progress-container">
     <div class="progress-text" id="progress-text"></div>
@@ -164,26 +157,6 @@
     const progressText = document.getElementById("progress-text");
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
-    const proverbEl = document.getElementById("proverb");
-
-    const proverbs = [
-      "A fool and his money are soon parted.",
-      "Even a clock that does not work is right twice a day.",
-      "When elephants fight, it is the grass that suffers. (African proverb)",
-      "A journey of a thousand miles begins with a single step. (Lao Tzu)",
-      "Smooth seas do not make skillful sailors. (African proverb)",
-      "Fall seven times, stand up eight. (Japanese proverb)",
-      "Don't push the river, it flows by itself. (Polish proverb)",
-      "He who has a why to live can bear almost any how. (Nietzsche)",
-      "Empty vessels make the most noise. (Indian proverb)",
-      "A bad workman blames his tools.",
-      // ... complete list of 134 proverbs should be here
-    ];
-
-    const proverbIndex = currentDay - 1;
-    if (proverbIndex >= 0 && proverbIndex < proverbs.length) {
-      proverbEl.textContent = `Proverbul zilei: "${proverbs[proverbIndex]}"`;
-    }
 
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
