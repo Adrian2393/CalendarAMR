@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="ro">
+<!DOCTYPE html><html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calendar EUFOR ROT. II</title>
+  <title>Calendar EUFOR ROT II</title>
   <style>
     body {
       margin: 0;
@@ -83,7 +82,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 72px;
-      color: rgba(255, 0, 0, 0.15);
+      color: rgba(255, 0, 0, 0.85);
       pointer-events: none;
     }
     .today {
@@ -99,11 +98,6 @@
     .countdown, .today-date {
       margin: 10px 0;
       font-size: 16px;
-    }
-    .proverb {
-      font-style: italic;
-      margin-top: 10px;
-      color: #ccc;
     }
     footer {
       margin-top: 40px;
@@ -133,25 +127,13 @@
       <img src="https://flagcdn.com/ro.svg" alt="România">
       <img src="https://flagcdn.com/ba.svg" alt="Bosnia și Herțegovina">
     </div>
-  </header>
-
-  <div class="today-date" id="today-date"></div>
-  <div class="countdown" id="countdown"></div>
-
-  <div class="progress-container">
+  </header>  <div class="today-date" id="today-date"></div>
+  <div class="countdown" id="countdown"></div>  <div class="progress-container">
     <div class="progress-text" id="progress-text"></div>
     <div class="progress-bar" id="progress-bar"></div>
-  </div>
-
-  <div class="calendar" id="calendar"></div>
-
-  <div class="proverb" id="proverb"></div>
-
-  <footer>
+  </div>  <div class="calendar" id="calendar"></div>  <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
-  </footer>
-
-  <script>
+  </footer>  <script>
     const start = new Date("2025-05-13");
     const end = new Date("2025-09-23");
     const today = new Date();
@@ -164,24 +146,6 @@
     const progressText = document.getElementById("progress-text");
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
-    const proverbEl = document.getElementById("proverb");
-
-    const proverbs = [
-      "Even a broken clock is right twice a day.",
-      "When the character of a man is not clear to you, look at his friends. — Japanese Proverb",
-      "He who asks is a fool for five minutes, but he who does not ask remains a fool forever. — Chinese Proverb",
-      "Smooth seas do not make skillful sailors.",
-      "The palest ink is better than the best memory. — Chinese Proverb",
-      "The soul would have no rainbow if the eyes had no tears. — Native American Proverb",
-      "A journey of a thousand miles begins with a single step. — Lao Tzu",
-      "Even monkeys fall from trees. — Japanese Proverb",
-      "You can’t wake a person who is pretending to be asleep. — Navajo Proverb",
-      "Wisdom is like fire. People take it from others. — African Proverb"
-    ];
-
-    if (currentDay > 0 && currentDay <= proverbs.length) {
-      proverbEl.textContent = proverbs[currentDay - 1];
-    }
 
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
@@ -223,6 +187,5 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     todayDateEl.textContent = `Astăzi este ${localeDate}`;
-  </script>
-</body>
+  </script></body>
 </html>
