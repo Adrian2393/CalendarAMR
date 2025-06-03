@@ -29,7 +29,7 @@
     .progress-container {
       background-color: #444;
       border-radius: 10px;
-      height: 36px;
+      height: 40px;
       width: 90%;
       margin: 10px auto;
       overflow: hidden;
@@ -54,24 +54,21 @@
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-      justify-items: center;
+      gap: 8px;
+      justify-content: center;
       max-width: 800px;
       margin: 20px auto;
     }
     .day {
-      width: 60px;
-      height: 60px;
-      padding: 5px;
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
       border-radius: 6px;
       background-color: #2c2c2c;
       border: 1px solid #444;
+      font-size: 16px;
+      text-align: center;
       position: relative;
-      transition: transform 0.3s ease;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     .past {
       background-color: #2c2c2c;
@@ -83,23 +80,32 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 48px;
+      font-size: 36px;
       color: rgba(255, 0, 0, 0.85);
       pointer-events: none;
-      font-weight: 300;
     }
     .today {
-      background-color: #000;
+      background-color: #333;
       color: #ffd700;
       font-weight: bold;
-      border: 3px solid #ffd700;
-      box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.6);
-      transform: scale(1.15);
-      z-index: 2;
+      border: 2px solid #ffd700;
+    }
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      max-width: 800px;
+      margin: 0 auto 10px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .weekdays div {
+      text-align: center;
+      color: #ccc;
     }
     .countdown, .today-date {
       margin: 10px 0;
-      font-size: 18px;
+      font-size: 16px;
     }
     footer {
       margin-top: 40px;
@@ -109,20 +115,11 @@
     .month-break {
       grid-column: span 7;
       text-align: center;
-      padding: 20px 0 5px;
+      padding: 10px 0 0;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 18px;
       color: #ffd700;
       text-transform: uppercase;
-    }
-    .weekday-labels {
-      display: contents;
-    }
-    .weekday {
-      font-weight: bold;
-      color: #ccc;
-      font-size: 13px;
-      text-align: center;
     }
   </style>
 </head>
@@ -138,7 +135,7 @@
   <div class="countdown" id="countdown"></div>  <div class="progress-container">
     <div class="progress-text" id="progress-text"></div>
     <div class="progress-bar" id="progress-bar"></div>
-  </div>  <div class="calendar" id="calendar"></div>  <footer>
+  </div>  <div id="calendar-wrapper"></div>  <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
   </footer>  <script>
     const start = new Date("2025-05-13");
@@ -148,14 +145,27 @@
 
     const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
     const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
-    const calendarEl = document.getElementById("calendar");
+
     const progressBar = document.getElementById("progress-bar");
     const progressText = document.getElementById("progress-text");
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
+    const calendarWrapper = document.getElementById("calendar-wrapper");
 
     const weekdays = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
-    const dayWidth = 7;
+
+    const weekdayRow = document.createElement('div');
+    weekdayRow.classList.add('weekdays');
+    weekdays.forEach(day => {
+      const div = document.createElement('div');
+      div.textContent = day;
+      weekdayRow.appendChild(div);
+    });
+    calendarWrapper.appendChild(weekdayRow);
+
+    const calendarEl = document.createElement('div');
+    calendarEl.classList.add('calendar');
+    calendarWrapper.appendChild(calendarEl);
 
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
@@ -168,21 +178,20 @@
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
-
-        weekdays.forEach(day => {
-          const dayLabel = document.createElement("div");
-          dayLabel.classList.add("weekday");
-          dayLabel.textContent = day;
-          calendarEl.appendChild(dayLabel);
-        });
-
         lastMonth = currentMonth;
+
+        // Add weekday headers again after each month
+        weekdays.forEach(day => {
+          const div = document.createElement('div');
+          div.classList.add('weekdays-header');
+          div.textContent = day;
+          calendarEl.appendChild(div);
+        });
       }
 
       const day = document.createElement("div");
       day.classList.add("day");
-      const formattedDate = date.toLocaleDateString("ro-RO", { day: '2-digit', month: 'short' });
-      day.textContent = formattedDate;
+      day.textContent = date.getDate();
 
       if (date < today) {
         day.classList.add("past");
