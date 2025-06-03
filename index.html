@@ -52,46 +52,31 @@
       z-index: 1;
     }
     .calendar {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      justify-content: center;
       max-width: 800px;
       margin: 20px auto;
     }
-    .month-section {
-      width: 100%;
-    }
-    .month-break {
-      text-align: left;
-      padding: 10px 0 5px;
-      font-weight: bold;
-      font-size: 18px;
-      color: #ffd700;
-    }
-    .weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-transform: capitalize;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .weekdays div {
-      padding: 5px;
-    }
-    .days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-    }
-    .day {
-      padding: 10px 4px;
+    .day, .weekday {
+      padding: 10px;
       border-radius: 6px;
       background-color: #2c2c2c;
       border: 1px solid #444;
       position: relative;
-      transition: transform 0.3s ease;
       font-size: 13px;
-      min-height: 60px;
+      text-align: center;
+    }
+    .weekday {
+      background-color: transparent;
+      border: none;
+      font-weight: bold;
+      color: #ccc;
+    }
+    .past {
+      background-color: #2c2c2c;
+      color: #fff;
     }
     .past::after {
       content: "✘";
@@ -99,17 +84,16 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 60px;
+      font-size: 72px;
       color: rgba(255, 0, 0, 0.85);
       pointer-events: none;
       font-weight: 300;
     }
     .today {
+      background-color: #2c2c2c;
       border: 2px solid #ffd700;
       color: #ffd700;
       font-weight: bold;
-      background-color: #2c2c2c;
-      position: relative;
       z-index: 1;
     }
     .countdown, .today-date {
@@ -121,10 +105,16 @@
       font-size: 14px;
       color: #aaa;
     }
-    @media screen and (max-width: 600px) {
-      .weekdays, .days {
-        grid-template-columns: repeat(7, 1fr);
-      }
+    .month-break {
+      grid-column: span 7;
+      text-align: left;
+      padding: 10px 0 0;
+      font-weight: bold;
+      font-size: 18px;
+      color: #ffd700;
+    }
+    .weekdays {
+      display: contents;
     }
   </style>
 </head>
@@ -157,8 +147,7 @@
     const todayDateEl = document.getElementById("today-date");
 
     let lastMonth = "";
-    let monthSection = null;
-    let daysContainer = null;
+    let weekdays = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
 
     for (let i = 0; i < totalDays; i++) {
       const date = new Date(start);
@@ -166,44 +155,36 @@
 
       const currentMonth = date.toLocaleDateString("ro-RO", { month: 'long' });
       if (currentMonth !== lastMonth) {
-        monthSection = document.createElement("div");
-        monthSection.classList.add("month-section");
-
         const monthLabel = document.createElement("div");
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.charAt(0).toUpperCase() + currentMonth.slice(1);
-        monthSection.appendChild(monthLabel);
+        calendarEl.appendChild(monthLabel);
 
-        const weekdayHeader = document.createElement("div");
-        weekdayHeader.classList.add("weekdays");
-        ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă", "Duminică"].forEach(day => {
+        const weekdayRow = document.createElement("div");
+        weekdayRow.classList.add("weekdays");
+        weekdays.forEach(day => {
           const wd = document.createElement("div");
+          wd.classList.add("weekday");
           wd.textContent = day;
-          weekdayHeader.appendChild(wd);
+          calendarEl.appendChild(wd);
         });
-        monthSection.appendChild(weekdayHeader);
 
-        daysContainer = document.createElement("div");
-        daysContainer.classList.add("days");
-        monthSection.appendChild(daysContainer);
-
-        calendarEl.appendChild(monthSection);
         lastMonth = currentMonth;
       }
 
-      const dayDiv = document.createElement("div");
-      dayDiv.classList.add("day");
+      const day = document.createElement("div");
+      day.classList.add("day");
       const weekday = date.toLocaleDateString("ro-RO", { weekday: 'short' });
       const formattedDate = date.toLocaleDateString("ro-RO", { day: '2-digit', month: 'short' });
-      dayDiv.textContent = `${formattedDate} ${weekday}`;
+      day.textContent = `${formattedDate} ${weekday}`;
 
       if (date < today) {
-        dayDiv.classList.add("past");
+        day.classList.add("past");
       } else if (date.getTime() === today.getTime()) {
-        dayDiv.classList.add("today");
+        day.classList.add("today");
       }
 
-      daysContainer.appendChild(dayDiv);
+      calendarEl.appendChild(day);
     }
 
     const progressPercent = Math.min((currentDay / totalDays) * 100, 100);
