@@ -18,10 +18,10 @@
     }
     h1 {
       font-size: 32px;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
     .flags {
-      margin-top: 10px;
+      margin-top: 5px;
     }
     .flags img {
       width: 30px;
@@ -30,7 +30,7 @@
     .progress-container {
       background-color: #444;
       border-radius: 10px;
-      height: 30px;
+      height: 40px;
       width: 90%;
       margin: 10px auto;
       overflow: hidden;
@@ -49,27 +49,26 @@
       transform: translate(-50%, -50%);
       color: #fff;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       z-index: 1;
     }
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
+      gap: 8px;
       justify-content: center;
       max-width: 800px;
       margin: 20px auto;
     }
     .day {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
       border-radius: 6px;
       background-color: #2c2c2c;
       border: 1px solid #444;
       font-size: 16px;
+      text-align: center;
       position: relative;
     }
     .past {
@@ -82,12 +81,28 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 42px;
+      font-size: 36px;
       color: rgba(255, 0, 0, 0.85);
       pointer-events: none;
     }
     .today {
+      background-color: #333;
+      color: #ffd700;
       font-weight: bold;
+      border: 2px solid #ffd700;
+    }
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      max-width: 800px;
+      margin: 0 auto 10px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .weekdays div {
+      text-align: center;
+      color: #ccc;
     }
     .countdown, .today-date {
       margin: 10px 0;
@@ -101,19 +116,11 @@
     .month-break {
       grid-column: span 7;
       text-align: center;
-      padding: 10px 0;
+      padding: 10px 0 0;
       font-weight: bold;
       font-size: 18px;
       color: #ffd700;
       text-transform: uppercase;
-    }
-    .weekdays {
-      display: contents;
-    }
-    .weekday {
-      font-weight: bold;
-      color: #ccc;
-      font-size: 14px;
     }
   </style>
 </head>
@@ -125,43 +132,56 @@
       <img src="https://flagcdn.com/ro.svg" alt="România">
       <img src="https://flagcdn.com/ba.svg" alt="Bosnia și Herțegovina">
     </div>
-    <div class="today-date" id="today-date"></div>
-    <div class="countdown" id="countdown"></div>
-    <div class="progress-container">
-      <div class="progress-text" id="progress-text"></div>
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
-  </header>
-
-  <div class="calendar" id="calendar"></div>
-
+  </header>  
+  <div class="today-date" id="today-date"></div>
+  <div class="countdown" id="countdown"></div>  
+  <div class="progress-container">
+    <div class="progress-text" id="progress-text"></div>
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>  
+  <div id="calendar-wrapper"></div>  
   <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
-  </footer>
+  </footer>  
 
   <script>
     const start = new Date("2025-05-13");
     const end = new Date("2025-09-23");
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0,0,0,0);
 
     const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
     const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
-    const calendarEl = document.getElementById("calendar");
+
     const progressBar = document.getElementById("progress-bar");
     const progressText = document.getElementById("progress-text");
     const countdownEl = document.getElementById("countdown");
     const todayDateEl = document.getElementById("today-date");
+    const calendarWrapper = document.getElementById("calendar-wrapper");
 
-    const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
+    const weekdays = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
 
-    function createWeekdaysHeader() {
-      weekdays.forEach(day => {
-        const wd = document.createElement("div");
-        wd.classList.add("weekday");
-        wd.textContent = day;
-        calendarEl.appendChild(wd);
-      });
+    const weekdayRow = document.createElement('div');
+    weekdayRow.classList.add('weekdays');
+    weekdays.forEach(day => {
+      const div = document.createElement('div');
+      div.textContent = day;
+      weekdayRow.appendChild(div);
+    });
+    calendarWrapper.appendChild(weekdayRow);
+
+    const calendarEl = document.createElement('div');
+    calendarEl.classList.add('calendar');
+    calendarWrapper.appendChild(calendarEl);
+
+    // --- Aici e modificarea: offset pentru alinierea primei zile pe ziua corectă ---
+    const startWeekday = start.getDay(); // 0 = duminică, 1 = luni, ..., 6 = sâmbătă
+    const offset = startWeekday === 0 ? 6 : startWeekday - 1; // adaptăm la începutul săptămânii luni
+    for(let i = 0; i < offset; i++) {
+      const emptyDay = document.createElement("div");
+      emptyDay.classList.add("day");
+      emptyDay.textContent = "";
+      calendarEl.appendChild(emptyDay);
     }
 
     let lastMonth = "";
@@ -175,8 +195,15 @@
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
-        createWeekdaysHeader();
         lastMonth = currentMonth;
+
+        // Add weekday headers again after each month
+        weekdays.forEach(day => {
+          const div = document.createElement('div');
+          div.classList.add('weekdays-header');
+          div.textContent = day;
+          calendarEl.appendChild(div);
+        });
       }
 
       const day = document.createElement("div");
