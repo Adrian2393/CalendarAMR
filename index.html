@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ro">
+<!DOCTYPE html>
+<html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -130,9 +131,15 @@
       <div class="progress-text" id="progress-text"></div>
       <div class="progress-bar" id="progress-bar"></div>
     </div>
-  </header>  <div class="calendar" id="calendar"></div>  <footer>
+  </header>
+
+  <div class="calendar" id="calendar"></div>
+
+  <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
-  </footer>  <script>
+  </footer>
+
+  <script>
     const start = new Date("2025-05-13");
     const end = new Date("2025-09-23");
     const today = new Date();
@@ -196,5 +203,6 @@
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
     todayDateEl.textContent = `Astăzi este ${localeDate}`;
-  </script></body>
+  </script>
+</body>
 </html>
