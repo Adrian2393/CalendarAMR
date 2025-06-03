@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ro">
+<!DOCTYPE html><html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -132,17 +131,21 @@
       <img src="https://flagcdn.com/ro.svg" alt="România">
       <img src="https://flagcdn.com/ba.svg" alt="Bosnia și Herțegovina">
     </div>
-  </header>  
+  </header>
+
   <div class="today-date" id="today-date"></div>
-  <div class="countdown" id="countdown"></div>  
+  <div class="countdown" id="countdown"></div>
+
   <div class="progress-container">
     <div class="progress-text" id="progress-text"></div>
     <div class="progress-bar" id="progress-bar"></div>
-  </div>  
-  <div id="calendar-wrapper"></div>  
+  </div>
+
+  <div id="calendar-wrapper"></div>
+
   <footer>
     &copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.
-  </footer>  
+  </footer>
 
   <script>
     const start = new Date("2025-05-13");
@@ -174,14 +177,12 @@
     calendarEl.classList.add('calendar');
     calendarWrapper.appendChild(calendarEl);
 
-    // --- Aici e modificarea: offset pentru alinierea primei zile pe ziua corectă ---
-    const startWeekday = start.getDay(); // 0 = duminică, 1 = luni, ..., 6 = sâmbătă
-    const offset = startWeekday === 0 ? 6 : startWeekday - 1; // adaptăm la începutul săptămânii luni
-    for(let i = 0; i < offset; i++) {
-      const emptyDay = document.createElement("div");
-      emptyDay.classList.add("day");
-      emptyDay.textContent = "";
-      calendarEl.appendChild(emptyDay);
+    // Adaugă spații goale înainte de 13 mai (care e marți)
+    const firstWeekday = new Date(start).getDay(); // 0 = duminică
+    const weekdayOffset = (firstWeekday + 6) % 7; // adaptăm pentru ca săptămâna să înceapă de luni
+    for (let i = 0; i < weekdayOffset; i++) {
+      const empty = document.createElement('div');
+      calendarEl.appendChild(empty);
     }
 
     let lastMonth = "";
@@ -197,7 +198,6 @@
         calendarEl.appendChild(monthLabel);
         lastMonth = currentMonth;
 
-        // Add weekday headers again after each month
         weekdays.forEach(day => {
           const div = document.createElement('div');
           div.classList.add('weekdays-header');
