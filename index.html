@@ -19,8 +19,7 @@
     .past::after { content: "✘"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: rgba(255, 0, 0, 0.85); pointer-events: none; }
     .today { background-color: #333; color: #ffd700; font-weight: bold; border: 2px solid #ffd700; }
     .weekend { background-color: #262626; color: #ff6666; }
-    .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; max-width: 800px; margin: 0 auto 10px; font-weight: bold; font-size: 14px; }
-    .weekdays div { text-align: center; color: #ccc; }
+    .weekdays-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; font-weight: bold; font-size: 14px; color: #ccc; margin-bottom: 5px; }
     .countdown, .today-date { margin: 10px 0; font-size: 16px; }
     footer { margin-top: 40px; font-size: 14px; color: #aaa; }
     .month-break { grid-column: span 7; text-align: center; padding: 10px 0 0; font-weight: bold; font-size: 18px; color: #ffd700; text-transform: uppercase; }
@@ -61,21 +60,12 @@
 
     const weekdays = ['Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm', 'Dum'];
 
-    const weekdayRow = document.createElement('div');
-    weekdayRow.classList.add('weekdays');
-    weekdays.forEach(day => {
-      const div = document.createElement('div');
-      div.textContent = day;
-      weekdayRow.appendChild(div);
-    });
-    calendarWrapper.appendChild(weekdayRow);
-
     const calendarEl = document.createElement('div');
     calendarEl.classList.add('calendar');
     calendarWrapper.appendChild(calendarEl);
 
-    // 🛠️ Adaugăm spații goale DOAR la început, dacă 12 mai nu e luni
-    const firstDayOfWeek = start.getDay(); // 0 = duminică
+    // Adăugăm spații goale la început doar dacă prima zi nu e luni
+    const firstDayOfWeek = start.getDay();
     const weekdayIndex = (firstDayOfWeek + 6) % 7;
     for (let i = 0; i < weekdayIndex; i++) {
       const empty = document.createElement("div");
@@ -90,10 +80,22 @@
 
       const currentMonth = date.toLocaleDateString("ro-RO", { month: 'long' });
       if (currentMonth !== lastMonth) {
+        // Etichetă lună
         const monthLabel = document.createElement("div");
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
+
+        // Antet zile săptămână (aliniat)
+        const weekdayRow = document.createElement("div");
+        weekdayRow.classList.add("weekdays-row");
+        weekdays.forEach(day => {
+          const wd = document.createElement("div");
+          wd.textContent = day;
+          weekdayRow.appendChild(wd);
+        });
+        calendarEl.appendChild(weekdayRow);
+
         lastMonth = currentMonth;
       }
 
@@ -101,7 +103,7 @@
       day.classList.add("day");
       day.textContent = date.getDate();
 
-      const jsDay = date.getDay();
+      const jsDay = date.getDay(); // 0 = duminică, 6 = sâmbătă
       if (jsDay === 0 || jsDay === 6) {
         day.classList.add("weekend");
       }
