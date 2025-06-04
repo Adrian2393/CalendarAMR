@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calendar EUFOR ROT II</title>
   <style>
-    /* (CSS-ul rămâne neschimbat) */
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
     header { margin-bottom: 20px; }
     h1 { font-size: 32px; margin-bottom: 5px; }
@@ -29,7 +28,7 @@
 <body>
   <header>
     <h1>Calendar EUFOR ROT II</h1>
-    <div>Perioada 13 mai – 23 septembrie</div>
+    <div>Perioada 12 mai – 23 septembrie</div>
     <div class="flags">
       <img src="https://flagcdn.com/ro.svg" alt="România">
       <img src="https://flagcdn.com/ba.svg" alt="Bosnia și Herțegovina">
@@ -45,12 +44,12 @@
   <footer>&copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.</footer>
 
   <script>
-    const start = new Date("2025-05-13");
+    const start = new Date("2025-05-12"); // Noua dată de început (luni)
     const end = new Date("2025-09-23");
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1; // va fi 135 zile
     const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
 
     const progressBar = document.getElementById("progress-bar");
@@ -74,16 +73,6 @@
     calendarEl.classList.add('calendar');
     calendarWrapper.appendChild(calendarEl);
 
-    // 🛠️ Adăugăm zile goale înainte de 13 mai 2025 (marți)
-    const firstDayOfWeek = start.getDay(); // 2 (marți)
-    const weekdayIndex = (firstDayOfWeek + 6) % 7; // Transformă 0 (duminică) în 6 etc.
-
-    for (let i = 0; i < weekdayIndex; i++) {
-      const empty = document.createElement("div");
-      empty.classList.add("day");
-      calendarEl.appendChild(empty);
-    }
-
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
       const date = new Date(start);
@@ -97,7 +86,6 @@
         calendarEl.appendChild(monthLabel);
         lastMonth = currentMonth;
 
-        // Repetați anteturile săptămânii (opțional)
         weekdays.forEach(day => {
           const div = document.createElement('div');
           div.classList.add('weekdays-header');
