@@ -18,12 +18,12 @@
     .past { background-color: #2c2c2c; color: #fff; }
     .past::after { content: "✘"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 36px; color: rgba(255, 0, 0, 0.85); pointer-events: none; }
     .today { background-color: #333; color: #ffd700; font-weight: bold; border: 2px solid #ffd700; }
+    .weekend { background-color: #262626; color: #ff6666; }
     .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; max-width: 800px; margin: 0 auto 10px; font-weight: bold; font-size: 14px; }
     .weekdays div { text-align: center; color: #ccc; }
     .countdown, .today-date { margin: 10px 0; font-size: 16px; }
     footer { margin-top: 40px; font-size: 14px; color: #aaa; }
     .month-break { grid-column: span 7; text-align: center; padding: 10px 0 0; font-weight: bold; font-size: 18px; color: #ffd700; text-transform: uppercase; }
-    .weekend { background-color: #262626; color: #ff6666; }
   </style>
 </head>
 <body>
@@ -45,7 +45,7 @@
   <footer>&copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.</footer>
 
   <script>
-    const start = new Date("2025-05-12"); // luni
+    const start = new Date("2025-05-12");
     const end = new Date("2025-09-23");
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -74,37 +74,26 @@
     calendarEl.classList.add('calendar');
     calendarWrapper.appendChild(calendarEl);
 
+    // 🛠️ Adaugăm spații goale DOAR la început, dacă 12 mai nu e luni
+    const firstDayOfWeek = start.getDay(); // 0 = duminică
+    const weekdayIndex = (firstDayOfWeek + 6) % 7;
+    for (let i = 0; i < weekdayIndex; i++) {
+      const empty = document.createElement("div");
+      empty.classList.add("day");
+      calendarEl.appendChild(empty);
+    }
+
     let lastMonth = "";
     for (let i = 0; i < totalDays; i++) {
       const date = new Date(start);
       date.setDate(start.getDate() + i);
 
       const currentMonth = date.toLocaleDateString("ro-RO", { month: 'long' });
-      const isFirstOfMonth = date.getDate() === 1;
-
-      if (currentMonth !== lastMonth || isFirstOfMonth) {
+      if (currentMonth !== lastMonth) {
         const monthLabel = document.createElement("div");
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
-
-        weekdays.forEach(day => {
-          const div = document.createElement('div');
-          div.classList.add('weekdays-header');
-          div.textContent = day;
-          calendarEl.appendChild(div);
-        });
-
-        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-        const jsDay = firstDayOfMonth.getDay();
-        const weekdayIndex = (jsDay + 6) % 7;
-
-        for (let j = 0; j < weekdayIndex; j++) {
-          const empty = document.createElement("div");
-          empty.classList.add("day");
-          calendarEl.appendChild(empty);
-        }
-
         lastMonth = currentMonth;
       }
 
@@ -112,7 +101,7 @@
       day.classList.add("day");
       day.textContent = date.getDate();
 
-      const jsDay = date.getDay(); // 0 = duminică, 6 = sâmbătă
+      const jsDay = date.getDay();
       if (jsDay === 0 || jsDay === 6) {
         day.classList.add("weekend");
       }
