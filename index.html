@@ -23,6 +23,7 @@
     .countdown, .today-date { margin: 10px 0; font-size: 16px; }
     footer { margin-top: 40px; font-size: 14px; color: #aaa; }
     .month-break { grid-column: span 7; text-align: center; padding: 10px 0 0; font-weight: bold; font-size: 18px; color: #ffd700; text-transform: uppercase; }
+    .weekend { background-color: #262626; color: #ff6666; }
   </style>
 </head>
 <body>
@@ -44,12 +45,12 @@
   <footer>&copy; EUFOR ROT II &mdash; Calendar actualizat automat zilnic.</footer>
 
   <script>
-    const start = new Date("2025-05-12"); // Noua dată de început (luni)
+    const start = new Date("2025-05-12"); // luni
     const end = new Date("2025-09-23");
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1; // va fi 135 zile
+    const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
     const currentDay = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
 
     const progressBar = document.getElementById("progress-bar");
@@ -79,12 +80,13 @@
       date.setDate(start.getDate() + i);
 
       const currentMonth = date.toLocaleDateString("ro-RO", { month: 'long' });
-      if (currentMonth !== lastMonth) {
+      const isFirstOfMonth = date.getDate() === 1;
+
+      if (currentMonth !== lastMonth || isFirstOfMonth) {
         const monthLabel = document.createElement("div");
         monthLabel.classList.add("month-break");
         monthLabel.textContent = currentMonth.toUpperCase();
         calendarEl.appendChild(monthLabel);
-        lastMonth = currentMonth;
 
         weekdays.forEach(day => {
           const div = document.createElement('div');
@@ -92,11 +94,28 @@
           div.textContent = day;
           calendarEl.appendChild(div);
         });
+
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const jsDay = firstDayOfMonth.getDay();
+        const weekdayIndex = (jsDay + 6) % 7;
+
+        for (let j = 0; j < weekdayIndex; j++) {
+          const empty = document.createElement("div");
+          empty.classList.add("day");
+          calendarEl.appendChild(empty);
+        }
+
+        lastMonth = currentMonth;
       }
 
       const day = document.createElement("div");
       day.classList.add("day");
       day.textContent = date.getDate();
+
+      const jsDay = date.getDay(); // 0 = duminică, 6 = sâmbătă
+      if (jsDay === 0 || jsDay === 6) {
+        day.classList.add("weekend");
+      }
 
       if (date < today) {
         day.classList.add("past");
