@@ -121,8 +121,8 @@
   <header>
     <h1>Callendar EUFOR rot. II</h1>
     <div class="flags">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg" alt="Romania">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Flag_of_Bosnia_and_Herzegovina.svg" alt="Bosnia and Herzegovina">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg" alt="România">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Flag_of_Bosnia_and_Herzegovina.svg" alt="Bosnia și Herțegovina">
     </div>
     <p>13 mai – 23 septembrie 2025</p>
   </header>
@@ -148,6 +148,8 @@
       "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
     ];
 
+    const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
+
     let totalDays = 0;
     let tempDate = new Date(startDate);
     while (tempDate <= endDate) {
@@ -160,17 +162,18 @@
     let currentMonth = current.getMonth();
 
     while (current <= endDate) {
+      const thisMonth = current.getMonth();
       const monthSection = document.createElement("div");
       monthSection.className = "month-section";
 
       const monthTitle = document.createElement("h2");
-      monthTitle.textContent = monthNames[currentMonth];
+      monthTitle.textContent = monthNames[thisMonth];
       monthSection.appendChild(monthTitle);
 
       const calendarGrid = document.createElement("div");
       calendarGrid.className = "calendar";
 
-      const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
+      // Add weekday headers
       weekdays.forEach(day => {
         const weekday = document.createElement("div");
         weekday.className = "weekday";
@@ -178,15 +181,16 @@
         calendarGrid.appendChild(weekday);
       });
 
-      // Offset for Monday start
-      const firstOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
-      const offset = (firstOfMonth.getDay() + 6) % 7;
+      // Determine the offset for the first visible day in this month
+      const firstVisibleDay = new Date(current);
+      const offset = (firstVisibleDay.getDay() + 6) % 7; // shift so Monday = 0
+
       for (let i = 0; i < offset; i++) {
         calendarGrid.appendChild(document.createElement("div"));
       }
 
-      // Fill in the days
-      while (current.getMonth() === currentMonth && current <= endDate) {
+      // Fill in the days of this month (only those in range)
+      while (current.getMonth() === thisMonth && current <= endDate) {
         const dayBox = document.createElement("div");
         dayBox.classList.add("day");
         dayBox.textContent = current.getDate();
@@ -202,7 +206,6 @@
 
       monthSection.appendChild(calendarGrid);
       calendarContainer.appendChild(monthSection);
-      currentMonth = current.getMonth();
     }
 
     const percent = Math.floor((passedDays / totalDays) * 100);
