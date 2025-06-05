@@ -75,23 +75,23 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 32px;
+      font-size: 48px;
       color: red;
-      opacity: 0.3;
-      font-weight: 600;
+      opacity: 0.25;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
+      transform: scale(1.6);
       pointer-events: none;
     }
 
     .progress-bar {
-      margin: 20px auto;
+      margin: 20px auto 5px;
       background-color: #ccc;
       border-radius: 5px;
       overflow: hidden;
       width: 100%;
-      max-width: none;
     }
 
     .progress-bar-inner {
@@ -101,6 +101,13 @@
       color: white;
       line-height: 30px;
       width: 0%;
+    }
+
+    #todayMessage {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      color: #1b3d1f;
     }
 
     footer {
@@ -150,6 +157,8 @@
     <div class="progress-bar-inner" id="progressText">Loading...</div>
   </div>
 
+  <p id="todayMessage"></p>
+
   <div id="calendarContainer"></div>
 
   <footer>
@@ -163,6 +172,7 @@
     today.setHours(0, 0, 0, 0);
 
     const calendarContainer = document.getElementById("calendarContainer");
+    const todayMsg = document.getElementById("todayMessage");
 
     const monthNames = [
       "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai",
@@ -181,6 +191,20 @@
     let passedDays = 0;
     let current = new Date(startDate);
 
+    let todayIndex = 1;
+    let counter = 1;
+    while (current <= endDate) {
+      if (current < today) {
+        todayIndex++;
+      }
+      current.setDate(current.getDate() + 1);
+      counter++;
+    }
+
+    todayMsg.textContent = `Astăzi este ziua ${todayIndex} din ${totalDays}`;
+
+    current = new Date(startDate);
+
     while (current <= endDate) {
       const thisMonth = current.getMonth();
       const monthSection = document.createElement("div");
@@ -193,7 +217,6 @@
       const calendarGrid = document.createElement("div");
       calendarGrid.className = "calendar";
 
-      // Headers
       weekdays.forEach(day => {
         const weekday = document.createElement("div");
         weekday.className = "weekday";
@@ -201,7 +224,6 @@
         calendarGrid.appendChild(weekday);
       });
 
-      // Offset
       const firstVisibleDay = new Date(current);
       const offset = (firstVisibleDay.getDay() + 6) % 7;
 
@@ -210,7 +232,6 @@
         calendarGrid.appendChild(emptyCell);
       }
 
-      // Days
       while (current.getMonth() === thisMonth && current <= endDate) {
         const dayBox = document.createElement("div");
         dayBox.classList.add("day");
