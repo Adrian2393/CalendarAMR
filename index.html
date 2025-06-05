@@ -4,13 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Callendar EUFOR rot. II</title>
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Permanent+Marker&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       background-color: #eef9f1;
       color: #1b3d1f;
       margin: 0;
@@ -22,6 +19,7 @@
       color: white;
       padding: 20px;
       text-align: center;
+      width: 100%;
     }
 
     .flags {
@@ -35,40 +33,39 @@
     }
 
     h2 {
-      margin-top: 60px;
-      margin-bottom: 20px;
+      margin-top: 40px;
+      margin-bottom: 15px;
       text-align: center;
       background-color: #a9dfbf;
       padding: 10px;
       border-radius: 5px;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
     }
 
     .month-section {
       max-width: 1000px;
       margin: auto;
-      padding: 0 20px 40px;
+      padding: 0 10px 30px;
     }
 
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
+      gap: 4px;
     }
 
     .day {
-      padding: 15px;
+      padding: 10px;
       border: 1px solid #1b3d1f;
       text-align: center;
       background-color: #cdeac0;
-      font-size: 24px; /* Mărit */
-      font-family: 'Orbitron', sans-serif; /* Font cool */
+      font-size: 24px;
+      font-family: 'Bebas Neue', cursive;
       position: relative;
-    }
-
-    .day.past {
-      background-color: #cdeac0;
-      color: #1b3d1f;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .day.past::after {
@@ -78,23 +75,23 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 48px;
-      font-family: 'Permanent Marker', cursive;
+      font-size: 32px;
       color: red;
-      opacity: 0.3; /* Scăzut la 30% */
+      opacity: 0.3;
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: normal;
       pointer-events: none;
     }
 
     .progress-bar {
-      margin: 30px auto;
+      margin: 20px auto;
       background-color: #ccc;
       border-radius: 5px;
       overflow: hidden;
-      max-width: 600px;
+      width: 100%;
+      max-width: none;
     }
 
     .progress-bar-inner {
@@ -111,14 +108,30 @@
       color: white;
       text-align: center;
       padding: 20px;
-      margin-top: 60px;
+      margin-top: 40px;
     }
 
     .weekday {
       font-weight: bold;
       background-color: #a9dfbf;
       text-align: center;
-      padding: 10px;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .calendar {
+        gap: 2px;
+      }
+
+      .day {
+        height: 45px;
+        padding: 6px;
+      }
+
+      h2 {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
@@ -147,6 +160,8 @@
     const startDate = new Date("2025-05-13");
     const endDate = new Date("2025-09-23");
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const calendarContainer = document.getElementById("calendarContainer");
 
     const monthNames = [
@@ -178,6 +193,7 @@
       const calendarGrid = document.createElement("div");
       calendarGrid.className = "calendar";
 
+      // Headers
       weekdays.forEach(day => {
         const weekday = document.createElement("div");
         weekday.className = "weekday";
@@ -185,20 +201,22 @@
         calendarGrid.appendChild(weekday);
       });
 
+      // Offset
       const firstVisibleDay = new Date(current);
       const offset = (firstVisibleDay.getDay() + 6) % 7;
 
       for (let i = 0; i < offset; i++) {
-        calendarGrid.appendChild(document.createElement("div"));
+        const emptyCell = document.createElement("div");
+        calendarGrid.appendChild(emptyCell);
       }
 
+      // Days
       while (current.getMonth() === thisMonth && current <= endDate) {
         const dayBox = document.createElement("div");
         dayBox.classList.add("day");
         dayBox.textContent = current.getDate();
 
-        const currentDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        if (current < currentDateOnly) {
+        if (current < today) {
           dayBox.classList.add("past");
           passedDays++;
         }
