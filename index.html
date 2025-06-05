@@ -175,11 +175,10 @@
 
   <div id="currentDayInfo"></div>
   <div id="countdown"></div>
-
   <div id="calendarContainer"></div>
 
   <footer>
-    &copy; 2025 Calendar EUFOR rot. II. Toate drepturile rezervate.
+    &copy; 2025 Calendar EUFOR rot. II. Toate drepturile rezervate. ® Adrian R. 
   </footer>
 
   <script>
@@ -191,11 +190,20 @@
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
     const passedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
     const currentDay = passedDays + 1;
+    const daysLeft = Math.max(0, Math.floor((endDate - today) / (1000 * 60 * 60 * 24)));
 
+    // Setăm progresul
+    const percent = Math.min(100, Math.max(0, Math.floor((passedDays / totalDays) * 100)));
+    document.getElementById("progressBarInner").style.width = percent + "%";
+    document.getElementById("progressBarText").textContent = `${passedDays} / ${totalDays} zile`;
+
+    document.getElementById("currentDayInfo").textContent = `Astăzi este ziua ${currentDay} din ${totalDays}`;
+    document.getElementById("countdown").textContent = `Au mai rămas ${daysLeft} zile`;
+
+    // Calendar vizual
     const calendarContainer = document.getElementById("calendarContainer");
     const monthNames = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie"];
     const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
-
     let date = new Date(startDate);
     let currentMonth = -1;
     let calendarGrid;
@@ -203,14 +211,11 @@
     while (date <= endDate) {
       if (date.getMonth() !== currentMonth) {
         currentMonth = date.getMonth();
-
         const monthSection = document.createElement("div");
         monthSection.className = "month-section";
-
         const monthTitle = document.createElement("h2");
         monthTitle.textContent = monthNames[currentMonth];
         monthSection.appendChild(monthTitle);
-
         calendarGrid = document.createElement("div");
         calendarGrid.className = "calendar";
 
@@ -234,29 +239,55 @@
       const dayBox = document.createElement("div");
       dayBox.classList.add("day");
       dayBox.textContent = date.getDate();
-
-      if (date < today) {
-        dayBox.classList.add("past");
-      }
+      if (date < today) dayBox.classList.add("past");
 
       calendarGrid.appendChild(dayBox);
       date.setDate(date.getDate() + 1);
     }
 
-    const percent = Math.min(100, Math.max(0, Math.floor((passedDays / totalDays) * 100)));
+    // Notificări zilnice la ora 08:00
+    function sendDailyNotification(day, total) {
+      new Notification('Wake up!', {
+        body: `E ziua ${day} / ${total}`,
+        icon: 'https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg'
+      });
+    }
 
-    const progressBarInner = document.getElementById("progressBarInner");
-    const progressBarText = document.getElementById("progressBarText");
+    function msUntilNext8AM() {
+      const now = new Date();
+      const next8 = new Date();
+      next8.setHours(8, 0, 0, 0);
+      if (now >= next8) next8.setDate(next8.getDate() + 1);
+      return next8 - now;
+    }
 
-    progressBarInner.style.width = percent + "%";
-    progressBarText.textContent = `${passedDays} / ${totalDays} zile`;
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') setupNotifications();
+        });
+      } else if (Notification.permission === 'granted') {
+        setupNotifications();
+      }
+    }
 
-    document.getElementById("currentDayInfo").textContent = `Astăzi este ziua ${currentDay} din ${totalDays}`;
+    function setupNotifications() {
+      setTimeout(() => {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const passed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+        const day = passed + 1;
+        sendDailyNotification(day, totalDays);
 
-    // Countdown zile ramase
-    const daysLeft = Math.max(0, Math.floor((endDate - today) / (1000 * 60 * 60 * 24)));
-    const countdownEl = document.getElementById("countdown");
-    countdownEl.textContent = `Au mai rămas ${daysLeft} zile`;
+        setInterval(() => {
+          const now = new Date();
+          now.setHours(0, 0, 0, 0);
+          const passed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+          const day = passed + 1;
+          sendDailyNotification(day, totalDays);
+        }, 24 * 60 * 60 * 1000);
+      }, msUntilNext8AM());
+    }
   </script>
 </body>
 </html>
