@@ -78,9 +78,9 @@
     }
 
     .day.today {
-      border: 2px solid #2c5f2d;
-      background-color: #f7ffb0;
-      box-shadow: 0 0 10px rgba(44, 95, 45, 0.6);
+      border: 3px solid #f1c40f;
+      background-color: #fffca2;
+      box-shadow: 0 0 12px rgba(241, 196, 15, 0.8);
       font-weight: bold;
     }
 
@@ -195,14 +195,13 @@
     today.setHours(0, 0, 0, 0);
 
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-    const currentDay = Math.max(1, Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1);
-    const passedDays = currentDay - 1;
+    const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); // zile trecute complet
+    const currentDay = daysPassed + 1; // ziua în curs
     const daysLeft = Math.max(0, totalDays - currentDay);
 
-    const percent = Math.min(100, Math.floor((currentDay / totalDays) * 100));
-
+    const percent = Math.min(100, Math.floor((daysPassed / totalDays) * 100));
     document.getElementById("progressBarInner").style.width = percent + "%";
-    document.getElementById("progressBarText").textContent = `${currentDay} / ${totalDays} zile`;
+    document.getElementById("progressBarText").textContent = `${daysPassed} / ${totalDays} zile`;
 
     document.getElementById("currentDayInfo").textContent = `Astăzi este ziua ${currentDay} din ${totalDays}`;
     document.getElementById("countdown").textContent = `Au mai rămas ${daysLeft} zile`;
@@ -254,50 +253,6 @@
 
       calendarGrid.appendChild(dayBox);
       date.setDate(date.getDate() + 1);
-    }
-
-    // Notificări zilnice (opțional)
-    function sendDailyNotification(day, total) {
-      new Notification('Wake up!', {
-        body: `E ziua ${day} / ${total}`,
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg'
-      });
-    }
-
-    function msUntilNext8AM() {
-      const now = new Date();
-      const next8 = new Date();
-      next8.setHours(8, 0, 0, 0);
-      if (now >= next8) next8.setDate(next8.getDate() + 1);
-      return next8 - now;
-    }
-
-    if ('Notification' in window) {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') setupNotifications();
-        });
-      } else if (Notification.permission === 'granted') {
-        setupNotifications();
-      }
-    }
-
-    function setupNotifications() {
-      setTimeout(() => {
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-        const passed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-        const day = passed + 1;
-        sendDailyNotification(day, totalDays);
-
-        setInterval(() => {
-          const now = new Date();
-          now.setHours(0, 0, 0, 0);
-          const passed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-          const day = passed + 1;
-          sendDailyNotification(day, totalDays);
-        }, 24 * 60 * 60 * 1000);
-      }, msUntilNext8AM());
     }
   </script>
 </body>
