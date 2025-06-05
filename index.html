@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Callendar EUFOR rot. II</title>
 
-  <!-- Font "Permanent Marker" pentru X -->
-  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Permanent+Marker&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -61,7 +61,8 @@
       border: 1px solid #1b3d1f;
       text-align: center;
       background-color: #cdeac0;
-      font-size: 18px; /* Crescut de la 14px */
+      font-size: 24px; /* Mărit */
+      font-family: 'Orbitron', sans-serif; /* Font cool */
       position: relative;
     }
 
@@ -77,14 +78,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 48px; /* Micșorat de la 60px */
+      font-size: 48px;
       font-family: 'Permanent Marker', cursive;
       color: red;
-      opacity: 0.8;
+      opacity: 0.3; /* Scăzut la 30% */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: normal; /* Subțiat */
+      font-weight: normal;
       pointer-events: none;
     }
 
@@ -146,7 +147,6 @@
     const startDate = new Date("2025-05-13");
     const endDate = new Date("2025-09-23");
     const today = new Date();
-
     const calendarContainer = document.getElementById("calendarContainer");
 
     const monthNames = [
