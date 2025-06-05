@@ -1,124 +1,196 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Calendar EUFOR ROT II</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Callendar EUFOR rot. II</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #1a1a1a;
-      color: #f0f0f0;
+      background-color: #eef9f1;
+      color: #1b3d1f;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #2c5f2d;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    section {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      border-bottom: 2px solid #2c5f2d;
+      padding-bottom: 10px;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-top: 20px;
+    }
+    .day {
+      padding: 10px;
+      border: 1px solid #1b3d1f;
+      text-align: center;
+      background-color: #cdeac0;
+    }
+    .day.past {
+      background-color: #f8d7da;
+      text-decoration: line-through;
+      color: red;
+      font-weight: bold;
+    }
+    .progress-bar {
+      margin-top: 30px;
+      background-color: #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-bar-inner {
+      height: 30px;
+      background-color: #4caf50;
+      text-align: center;
+      color: white;
+      line-height: 30px;
+      width: 0%;
+    }
+    footer {
+      background-color: #2c5f2d;
+      color: white;
+      text-align: center;
       padding: 20px;
     }
-    table {
-      border-collapse: collapse;
-      margin: 40px auto;
-      width: 100%;
-      max-width: 600px;
-      background-color: #2c2c2c;
-      border: 1px solid #444;
-    }
-    caption {
-      font-weight: bold;
-      font-size: 1.5em;
-      color: #ffd700;
-      margin-bottom: 5px;
-    }
-    th, td {
-      border: 1px solid #444;
+    nav {
       text-align: center;
-      padding: 10px;
-      width: 14.28%;
-      color: #f0f0f0;
+      margin-top: 20px;
     }
-    th {
-      background-color: #333;
-      color: #ccc;
-    }
-    .weekend {
-      background-color: #3b1f1f;
-      color: #ff6666;
-    }
-    .empty {
-      background-color: #1a1a1a;
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #1b3d1f;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-<!-- MAI -->
-<table>
-  <caption>Mai 2025</caption>
-  <thead>
-    <tr><th>Lu</th><th>Ma</th><th>Mi</th><th>Jo</th><th>Vi</th><th class="weekend">Sâ</th><th class="weekend">Du</th></tr>
-  </thead>
-  <tbody>
-    <tr><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td></tr>
-    <tr><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td></tr>
-    <tr><td class="empty"></td><td>13</td><td>14</td><td>15</td><td>16</td><td class="weekend">17</td><td class="weekend">18</td></tr>
-    <tr><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td class="weekend">24</td><td class="weekend">25</td></tr>
-    <tr><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td class="weekend">31</td><td class="empty"></td></tr>
-  </tbody>
-</table>
+  <header>
+    <h1>Callendar EUFOR rot. II</h1>
+    <p>Army-Themed Planning Tool (May 13 – Sept 23, 2025)</p>
+  </header>
 
-<!-- IUNIE -->
-<table>
-  <caption>Iunie 2025</caption>
-  <thead>
-    <tr><th>Lu</th><th>Ma</th><th>Mi</th><th>Jo</th><th>Vi</th><th class="weekend">Sâ</th><th class="weekend">Du</th></tr>
-  </thead>
-  <tbody>
-    <tr><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="weekend">1</td><td class="weekend">2</td></tr>
-    <tr><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td class="weekend">8</td><td class="weekend">9</td></tr>
-    <tr><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td class="weekend">15</td><td class="weekend">16</td></tr>
-    <tr><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td class="weekend">22</td><td class="weekend">23</td></tr>
-    <tr><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td class="weekend">29</td><td class="weekend">30</td></tr>
-  </tbody>
-</table>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-<!-- IULIE -->
-<table>
-  <caption>Iulie 2025</caption>
-  <thead>
-    <tr><th>Lu</th><th>Ma</th><th>Mi</th><th>Jo</th><th>Vi</th><th class="weekend">Sâ</th><th class="weekend">Du</th></tr>
-  </thead>
-  <tbody>
-    <tr><td class="empty"></td><td>1</td><td>2</td><td>3</td><td>4</td><td class="weekend">5</td><td class="weekend">6</td></tr>
-    <tr><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td class="weekend">12</td><td class="weekend">13</td></tr>
-    <tr><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td class="weekend">19</td><td class="weekend">20</td></tr>
-    <tr><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td class="weekend">26</td><td class="weekend">27</td></tr>
-    <tr><td>28</td><td>29</td><td>30</td><td>31</td><td class="empty"></td><td class="empty"></td><td class="empty"></td></tr>
-  </tbody>
-</table>
+  <section id="about">
+    <h2>About</h2>
+    <p>
+      The Custom Calendar Project is a unique time management tool designed with a bold army theme. 
+      It spans from May 13 to September 23, 2025, helping users track daily progress. This project 
+      was inspired by the need for disciplined planning and visual feedback. Each day that passes 
+      is marked with a red "X", bringing a sense of accomplishment and accountability.
+    </p>
+  </section>
 
-<!-- AUGUST -->
-<table>
-  <caption>August 2025</caption>
-  <thead>
-    <tr><th>Lu</th><th>Ma</th><th>Mi</th><th>Jo</th><th>Vi</th><th class="weekend">Sâ</th><th class="weekend">Du</th></tr>
-  </thead>
-  <tbody>
-    <tr><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td>1</td><td class="weekend">2</td><td class="weekend">3</td></tr>
-    <tr><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td class="weekend">9</td><td class="weekend">10</td></tr>
-    <tr><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td class="weekend">16</td><td class="weekend">17</td></tr>
-    <tr><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td class="weekend">23</td><td class="weekend">24</td></tr>
-    <tr><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td class="weekend">30</td><td class="weekend">31</td></tr>
-  </tbody>
-</table>
+  <section id="features">
+    <h2>Features</h2>
+    <ul>
+      <li>Army-themed interface for motivation and structure</li>
+      <li>Daily automatic updates that cross out past days</li>
+      <li>Progress bar to visualize time elapsed</li>
+      <li>Starts on Monday for better weekly alignment</li>
+    </ul>
+  </section>
 
-<!-- SEPTEMBRIE -->
-<table>
-  <caption>Septembrie 2025</caption>
-  <thead>
-    <tr><th>Lu</th><th>Ma</th><th>Mi</th><th>Jo</th><th>Vi</th><th class="weekend">Sâ</th><th class="weekend">Du</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td class="weekend">6</td><td class="weekend">7</td></tr>
-    <tr><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td class="weekend">13</td><td class="weekend">14</td></tr>
-    <tr><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td class="weekend">20</td><td class="weekend">21</td></tr>
-    <tr><td>22</td><td>23</td><td>24</td><td class="empty"></td><td class="empty"></td><td class="empty"></td><td class="empty"></td></tr>
-  </tbody>
-</table>
+  <section id="how">
+    <h2>How It Works</h2>
+    <p>
+      The calendar dynamically displays each day from May 13 to September 23. Past days are marked 
+      with a red "X" and styled in red. A progress bar shows how far along you are in the 134-day 
+      journey. You can use this calendar to track goals, training, or countdowns.
+    </p>
+    <div class="calendar" id="calendar"></div>
+    <div class="progress-bar">
+      <div class="progress-bar-inner" id="progressText">Loading...</div>
+    </div>
+  </section>
 
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>
+      Have questions, feedback, or feature suggestions? Get in touch at 
+      <a href="mailto:contact@customcalendarproject.com">contact@customcalendarproject.com</a>
+    </p>
+  </section>
+
+  <footer>
+    &copy; 2025 Callendar EUFOR rot. II. All rights reserved.
+  </footer>
+
+  <script>
+    const start = new Date("2025-05-13");
+    const end = new Date("2025-09-23");
+    const today = new Date();
+
+    const calendarEl = document.getElementById("calendar");
+    const progressEl = document.getElementById("progressText");
+
+    let current = new Date(start);
+    let totalDays = 0;
+    while (current <= end) {
+      totalDays++;
+      current.setDate(current.getDate() + 1);
+    }
+
+    let passedDays = 0;
+    current = new Date(start);
+    const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    
+    // Add weekday headers
+    weekdays.forEach(day => {
+      const dayHeader = document.createElement("div");
+      dayHeader.textContent = day;
+      dayHeader.style.fontWeight = "bold";
+      dayHeader.style.backgroundColor = "#a9dfbf";
+      calendarEl.appendChild(dayHeader);
+    });
+
+    // Offset the first day to start on Monday
+    let offset = (start.getDay() + 6) % 7;
+    for (let i = 0; i < offset; i++) {
+      calendarEl.appendChild(document.createElement("div"));
+    }
+
+    current = new Date(start);
+    while (current <= end) {
+      const dayBox = document.createElement("div");
+      dayBox.classList.add("day");
+      const dateStr = current.toISOString().split("T")[0];
+      dayBox.textContent = dateStr;
+
+      if (current < today) {
+        dayBox.classList.add("past");
+        dayBox.textContent = "X";
+        passedDays++;
+      }
+
+      calendarEl.appendChild(dayBox);
+      current.setDate(current.getDate() + 1);
+    }
+
+    const percent = Math.floor((passedDays / totalDays) * 100);
+    progressEl.style.width = `${percent}%`;
+    progressEl.textContent = `${passedDays} / ${totalDays} days completed`;
+
+  </script>
 </body>
 </html>
