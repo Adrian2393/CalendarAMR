@@ -69,7 +69,7 @@
       font-size: 40px; /* mai mare */
       font-weight: bold;
       font-family: 'Permanent Marker', cursive;
-      color: rgba(255, 0, 0, 0.85);
+      color: rgba(255, 0, 0, 0.75); /* 10% mai transparent */
       pointer-events: none;
       user-select: none;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -89,10 +89,14 @@
     .progress-bar-inner {
       height: 30px;
       background-color: #4caf50;
-      text-align: center;
       color: white;
-      line-height: 30px;
       width: 0%;
+      /* CENTRARE TEXT BARA */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: normal; /* ca să nu dea conflict cu flex */
+      font-weight: bold;
     }
 
     #currentDayInfo {
@@ -101,6 +105,15 @@
       text-align: center;
       margin-top: 10px;
       color: #1b3d1f;
+    }
+
+    #daysLeftInfo {
+      font-family: 'Georgia', serif;
+      font-size: 20px;
+      text-align: center;
+      margin-top: 8px;
+      color: #1b3d1f;
+      font-weight: 600;
     }
 
     .weekday {
@@ -154,6 +167,8 @@
   </div>
 
   <div id="currentDayInfo"></div>
+  <!-- Aici o să punem zilele ramase -->
+  <div id="daysLeftInfo"></div>
 
   <div id="calendarContainer"></div>
 
@@ -170,6 +185,8 @@
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
     const passedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
     const currentDay = passedDays + 1;
+
+    const daysLeft = Math.max(0, Math.floor((endDate - today) / (1000 * 60 * 60 * 24)));
 
     const calendarContainer = document.getElementById("calendarContainer");
     const monthNames = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie"];
@@ -228,6 +245,8 @@
     progressBar.textContent = `${passedDays} / ${totalDays} zile`;
 
     document.getElementById("currentDayInfo").textContent = `Astăzi este ziua ${currentDay} din ${totalDays}`;
+
+    // Afișăm și zilele rămase
+    document.getElementById("daysLeftInfo").textContent = `Au mai rămas ${daysLeft} zile`;
   </script>
-</body>
-</html>
+</body
