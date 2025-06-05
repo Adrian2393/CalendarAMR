@@ -78,9 +78,22 @@
     }
 
     .day.today {
-      border: 3px solid #f1c40f;
-      background-color: #fffca2;
-      box-shadow: 0 0 12px rgba(241, 196, 15, 0.8);
+      outline: 3px solid #ff9900;
+      outline-offset: -2px;
+      box-shadow: 0 0 8px #ff9900aa;
+      position: relative;
+    }
+
+    .day.today::before {
+      content: "Azi";
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      background-color: #ff9900;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 12px;
       font-weight: bold;
     }
 
@@ -145,21 +158,9 @@
     }
 
     @media (max-width: 600px) {
-      .calendar {
-        grid-template-columns: repeat(7, 1fr);
-      }
-
       .day {
         padding: 6px;
-        font-size: 24px;
-      }
-
-      .progress-bar-text {
-        font-size: 14px;
-      }
-
-      header h1 {
-        font-size: 1.5rem;
+        font-size: 20px;
       }
     }
   </style>
@@ -185,7 +186,7 @@
   <div id="calendarContainer"></div>
 
   <footer>
-    &copy; 2025 Calendar EUFOR rot. II. Toate drepturile rezervate. ® Adrian R. 
+    &copy; 2025 Calendar EUFOR rot. II. Toate drepturile rezervate. ® Adrian R.
   </footer>
 
   <script>
@@ -195,20 +196,24 @@
     today.setHours(0, 0, 0, 0);
 
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-    const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); // zile trecute complet
+    const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); // zile încheiate
     const currentDay = daysPassed + 1; // ziua în curs
     const daysLeft = Math.max(0, totalDays - currentDay);
 
+    // Progres bar
     const percent = Math.min(100, Math.floor((daysPassed / totalDays) * 100));
     document.getElementById("progressBarInner").style.width = percent + "%";
     document.getElementById("progressBarText").textContent = `${daysPassed} / ${totalDays} zile`;
 
-    document.getElementById("currentDayInfo").textContent = `Astăzi este ziua ${currentDay} din ${totalDays}`;
+    // Info text sub bară
+    document.getElementById("currentDayInfo").textContent = `Astăzi este ziua ${currentDay} / ${totalDays}`;
     document.getElementById("countdown").textContent = `Au mai rămas ${daysLeft} zile`;
 
+    // Calendar
     const calendarContainer = document.getElementById("calendarContainer");
     const monthNames = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie"];
     const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
+
     let date = new Date(startDate);
     let currentMonth = -1;
     let calendarGrid;
@@ -245,7 +250,7 @@
       dayBox.classList.add("day");
       dayBox.textContent = date.getDate();
 
-      if (date.getTime() < today.getTime()) {
+      if (date < today) {
         dayBox.classList.add("past");
       } else if (date.getTime() === today.getTime()) {
         dayBox.classList.add("today");
