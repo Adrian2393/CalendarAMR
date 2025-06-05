@@ -12,45 +12,74 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       background-color: #2c5f2d;
       color: white;
       padding: 20px;
       text-align: center;
     }
-    section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: auto;
-    }
+
     h2 {
-      border-bottom: 2px solid #2c5f2d;
-      padding-bottom: 10px;
+      margin-top: 60px;
+      margin-bottom: 20px;
+      text-align: center;
+      background-color: #a9dfbf;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 1.4rem;
     }
+
+    .month-section {
+      max-width: 1000px;
+      margin: auto;
+      padding: 0 20px 40px;
+    }
+
     .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
-      margin-top: 20px;
     }
+
     .day {
-      padding: 10px;
+      padding: 15px;
       border: 1px solid #1b3d1f;
       text-align: center;
       background-color: #cdeac0;
+      font-size: 14px;
+      position: relative;
     }
+
     .day.past {
-      background-color: #f8d7da;
-      text-decoration: line-through;
+      background-color: #cdeac0;
+      color: #1b3d1f;
+    }
+
+    .day.past::after {
+      content: "X";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      font-size: 20px;
       color: red;
+      opacity: 0.15;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
     }
+
     .progress-bar {
-      margin-top: 30px;
+      margin: 30px auto;
       background-color: #ccc;
       border-radius: 5px;
       overflow: hidden;
+      max-width: 600px;
     }
+
     .progress-bar-inner {
       height: 30px;
       background-color: #4caf50;
@@ -59,21 +88,20 @@
       line-height: 30px;
       width: 0%;
     }
+
     footer {
       background-color: #2c5f2d;
       color: white;
       text-align: center;
       padding: 20px;
+      margin-top: 60px;
     }
-    nav {
-      text-align: center;
-      margin-top: 20px;
-    }
-    nav a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #1b3d1f;
+
+    .weekday {
       font-weight: bold;
+      background-color: #a9dfbf;
+      text-align: center;
+      padding: 10px;
     }
   </style>
 </head>
@@ -81,116 +109,94 @@
 
   <header>
     <h1>Callendar EUFOR rot. II</h1>
-    <p>Army-Themed Planning Tool (May 13 – Sept 23, 2025)</p>
+    <p>May 13 – Sept 23, 2025</p>
   </header>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#features">Features</a>
-    <a href="#how">How It Works</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <div class="progress-bar">
+    <div class="progress-bar-inner" id="progressText">Loading...</div>
+  </div>
 
-  <section id="about">
-    <h2>About</h2>
-    <p>
-      The Custom Calendar Project is a unique time management tool designed with a bold army theme. 
-      It spans from May 13 to September 23, 2025, helping users track daily progress. This project 
-      was inspired by the need for disciplined planning and visual feedback. Each day that passes 
-      is marked with a red "X", bringing a sense of accomplishment and accountability.
-    </p>
-  </section>
-
-  <section id="features">
-    <h2>Features</h2>
-    <ul>
-      <li>Army-themed interface for motivation and structure</li>
-      <li>Daily automatic updates that cross out past days</li>
-      <li>Progress bar to visualize time elapsed</li>
-      <li>Starts on Monday for better weekly alignment</li>
-    </ul>
-  </section>
-
-  <section id="how">
-    <h2>How It Works</h2>
-    <p>
-      The calendar dynamically displays each day from May 13 to September 23. Past days are marked 
-      with a red "X" and styled in red. A progress bar shows how far along you are in the 134-day 
-      journey. You can use this calendar to track goals, training, or countdowns.
-    </p>
-    <div class="calendar" id="calendar"></div>
-    <div class="progress-bar">
-      <div class="progress-bar-inner" id="progressText">Loading...</div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>
-      Have questions, feedback, or feature suggestions? Get in touch at 
-      <a href="mailto:contact@customcalendarproject.com">contact@customcalendarproject.com</a>
-    </p>
-  </section>
+  <div id="calendarContainer"></div>
 
   <footer>
     &copy; 2025 Callendar EUFOR rot. II. All rights reserved.
   </footer>
 
   <script>
-    const start = new Date("2025-05-13");
-    const end = new Date("2025-09-23");
+    const startDate = new Date("2025-05-13");
+    const endDate = new Date("2025-09-23");
     const today = new Date();
+    const calendarContainer = document.getElementById("calendarContainer");
 
-    const calendarEl = document.getElementById("calendar");
-    const progressEl = document.getElementById("progressText");
+    const monthNames = [
+      "January", "February", "March", "April", "May",
+      "June", "July", "August", "September", "October", "November", "December"
+    ];
 
-    let current = new Date(start);
+    let current = new Date(startDate);
     let totalDays = 0;
-    while (current <= end) {
+    while (current <= endDate) {
       totalDays++;
       current.setDate(current.getDate() + 1);
     }
 
     let passedDays = 0;
-    current = new Date(start);
-    const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    
-    // Add weekday headers
-    weekdays.forEach(day => {
-      const dayHeader = document.createElement("div");
-      dayHeader.textContent = day;
-      dayHeader.style.fontWeight = "bold";
-      dayHeader.style.backgroundColor = "#a9dfbf";
-      calendarEl.appendChild(dayHeader);
-    });
+    current = new Date(startDate);
+    let currentMonth = current.getMonth();
 
-    // Offset the first day to start on Monday
-    let offset = (start.getDay() + 6) % 7;
-    for (let i = 0; i < offset; i++) {
-      calendarEl.appendChild(document.createElement("div"));
-    }
+    while (current <= endDate) {
+      const monthSection = document.createElement("div");
+      monthSection.className = "month-section";
 
-    current = new Date(start);
-    while (current <= end) {
-      const dayBox = document.createElement("div");
-      dayBox.classList.add("day");
-      const dateStr = current.toISOString().split("T")[0];
-      dayBox.textContent = dateStr;
+      const monthTitle = document.createElement("h2");
+      monthTitle.textContent = monthNames[currentMonth];
+      monthSection.appendChild(monthTitle);
 
-      if (current < today) {
-        dayBox.classList.add("past");
-        dayBox.textContent = "X";
-        passedDays++;
+      const calendarGrid = document.createElement("div");
+      calendarGrid.className = "calendar";
+
+      // Weekday headers (Mon–Sun)
+      const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      weekdays.forEach(day => {
+        const weekday = document.createElement("div");
+        weekday.className = "weekday";
+        weekday.textContent = day;
+        calendarGrid.appendChild(weekday);
+      });
+
+      // Offset to align first day (Monday-based)
+      const firstOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
+      const offset = (firstOfMonth.getDay() + 6) % 7;
+
+      for (let i = 0; i < offset; i++) {
+        calendarGrid.appendChild(document.createElement("div"));
       }
 
-      calendarEl.appendChild(dayBox);
-      current.setDate(current.getDate() + 1);
+      // Fill in the days for current month
+      while (current.getMonth() === currentMonth && current <= endDate) {
+        const dayBox = document.createElement("div");
+        dayBox.classList.add("day");
+        dayBox.textContent = current.getDate();
+
+        if (current < today) {
+          dayBox.classList.add("past");
+          passedDays++;
+        }
+
+        calendarGrid.appendChild(dayBox);
+        current.setDate(current.getDate() + 1);
+      }
+
+      monthSection.appendChild(calendarGrid);
+      calendarContainer.appendChild(monthSection);
+
+      currentMonth = current.getMonth();
     }
 
     const percent = Math.floor((passedDays / totalDays) * 100);
-    progressEl.style.width = `${percent}%`;
-    progressEl.textContent = `${passedDays} / ${totalDays} days completed`;
-
+    const progressBar = document.getElementById("progressText");
+    progressBar.style.width = percent + "%";
+    progressBar.textContent = `${passedDays} / ${totalDays} days completed`;
   </script>
 </body>
 </html>
