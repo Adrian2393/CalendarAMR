@@ -61,7 +61,7 @@
       border: 1px solid #1b3d1f;
       text-align: center;
       background-color: #cdeac0;
-      font-size: 14px;
+      font-size: 18px; /* Crescut de la 14px */
       position: relative;
     }
 
@@ -77,14 +77,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 60px;
+      font-size: 48px; /* Micșorat de la 60px */
       font-family: 'Permanent Marker', cursive;
       color: red;
       opacity: 0.8;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      font-weight: normal; /* Subțiat */
       pointer-events: none;
     }
 
@@ -178,7 +178,6 @@
       const calendarGrid = document.createElement("div");
       calendarGrid.className = "calendar";
 
-      // Add weekday headers
       weekdays.forEach(day => {
         const weekday = document.createElement("div");
         weekday.className = "weekday";
@@ -186,21 +185,18 @@
         calendarGrid.appendChild(weekday);
       });
 
-      // Determine the offset for the first visible day in this month
       const firstVisibleDay = new Date(current);
-      const offset = (firstVisibleDay.getDay() + 6) % 7; // Monday = 0
+      const offset = (firstVisibleDay.getDay() + 6) % 7;
 
       for (let i = 0; i < offset; i++) {
         calendarGrid.appendChild(document.createElement("div"));
       }
 
-      // Fill in the days of this month (only those in range)
       while (current.getMonth() === thisMonth && current <= endDate) {
         const dayBox = document.createElement("div");
         dayBox.classList.add("day");
         dayBox.textContent = current.getDate();
 
-        // Verificăm doar dacă e cu adevărat o zi trecută (exclus ziua curentă)
         const currentDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         if (current < currentDateOnly) {
           dayBox.classList.add("past");
