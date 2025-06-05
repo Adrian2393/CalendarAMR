@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -18,6 +18,16 @@
       color: white;
       padding: 20px;
       text-align: center;
+    }
+
+    .flags {
+      margin-top: 10px;
+    }
+
+    .flags img {
+      height: 30px;
+      margin: 0 10px;
+      vertical-align: middle;
     }
 
     h2 {
@@ -63,13 +73,14 @@
       left: 0;
       right: 0;
       bottom: 0;
-      font-size: 20px;
+      font-size: 24px;
       color: red;
-      opacity: 0.15;
+      opacity: 0.8;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
+      pointer-events: none;
     }
 
     .progress-bar {
@@ -109,7 +120,11 @@
 
   <header>
     <h1>Callendar EUFOR rot. II</h1>
-    <p>May 13 – Sept 23, 2025</p>
+    <div class="flags">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg" alt="Romania">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Flag_of_Bosnia_and_Herzegovina.svg" alt="Bosnia and Herzegovina">
+    </div>
+    <p>13 mai – 23 septembrie 2025</p>
   </header>
 
   <div class="progress-bar">
@@ -119,7 +134,7 @@
   <div id="calendarContainer"></div>
 
   <footer>
-    &copy; 2025 Callendar EUFOR rot. II. All rights reserved.
+    &copy; 2025 Callendar EUFOR rot. II. Toate drepturile rezervate.
   </footer>
 
   <script>
@@ -129,19 +144,19 @@
     const calendarContainer = document.getElementById("calendarContainer");
 
     const monthNames = [
-      "January", "February", "March", "April", "May",
-      "June", "July", "August", "September", "October", "November", "December"
+      "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai",
+      "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
     ];
 
-    let current = new Date(startDate);
     let totalDays = 0;
-    while (current <= endDate) {
+    let tempDate = new Date(startDate);
+    while (tempDate <= endDate) {
       totalDays++;
-      current.setDate(current.getDate() + 1);
+      tempDate.setDate(tempDate.getDate() + 1);
     }
 
     let passedDays = 0;
-    current = new Date(startDate);
+    let current = new Date(startDate);
     let currentMonth = current.getMonth();
 
     while (current <= endDate) {
@@ -155,8 +170,7 @@
       const calendarGrid = document.createElement("div");
       calendarGrid.className = "calendar";
 
-      // Weekday headers (Mon–Sun)
-      const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+      const weekdays = ["Lun", "Mar", "Mie", "Joi", "Vin", "Sâm", "Dum"];
       weekdays.forEach(day => {
         const weekday = document.createElement("div");
         weekday.className = "weekday";
@@ -164,15 +178,14 @@
         calendarGrid.appendChild(weekday);
       });
 
-      // Offset to align first day (Monday-based)
+      // Offset for Monday start
       const firstOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
       const offset = (firstOfMonth.getDay() + 6) % 7;
-
       for (let i = 0; i < offset; i++) {
         calendarGrid.appendChild(document.createElement("div"));
       }
 
-      // Fill in the days for current month
+      // Fill in the days
       while (current.getMonth() === currentMonth && current <= endDate) {
         const dayBox = document.createElement("div");
         dayBox.classList.add("day");
@@ -189,14 +202,13 @@
 
       monthSection.appendChild(calendarGrid);
       calendarContainer.appendChild(monthSection);
-
       currentMonth = current.getMonth();
     }
 
     const percent = Math.floor((passedDays / totalDays) * 100);
     const progressBar = document.getElementById("progressText");
     progressBar.style.width = percent + "%";
-    progressBar.textContent = `${passedDays} / ${totalDays} days completed`;
+    progressBar.textContent = `${passedDays} / ${totalDays} zile trecute`;
   </script>
 </body>
 </html>
