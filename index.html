@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Calendar EUFOR rot. II</title>
+  <!-- Google Font Permanent Marker -->
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -61,18 +63,19 @@
     .day.past::after {
       content: "X";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      font-size: 26px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      font-size: 40px; /* mai mare */
       font-weight: bold;
-      font-family: "Brush Script MT", cursive;
-      color: rgba(255, 0, 0, 0.8);
+      font-family: 'Permanent Marker', cursive;
+      color: rgba(255, 0, 0, 0.85);
+      pointer-events: none;
+      user-select: none;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
     }
 
     .progress-bar {
