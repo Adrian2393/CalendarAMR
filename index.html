@@ -106,7 +106,7 @@
 
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
-    const passedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); // exact câte zile au trecut
+    const passedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)); // zile complet trecute
     const currentDay = Math.min(passedDays + 1, totalDays); // ziua în curs
 
     const daysRemaining = totalDays - currentDay;
